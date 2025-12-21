@@ -146,7 +146,7 @@ function PokerTable() {
   }
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 overflow-hidden">
+    <div className="relative w-full min-h-screen     flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 overflow-hidden">
       {/* Poker Table */}
       <div className="relative w-full max-w-none" style={{ aspectRatio: '16 / 9', maxHeight: '73vh', height: 'auto' }}>
         {/* Table Surface - elongated oval */}
