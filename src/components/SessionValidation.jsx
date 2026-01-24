@@ -50,30 +50,32 @@ export function SessionValidation({
   };
 
   return (
-    <div className="relative w-full min-h-full flex items-start justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 py-8 overflow-y-auto">
-      <div className="w-full max-w-md bg-gray-900 rounded-xl p-6 shadow-2xl">
-        <h2 className="text-white text-2xl mb-4 text-center">Session Ended</h2>
-        <div className="bg-gray-800 rounded-lg p-4 mb-4">
-          <div className="text-gray-400 text-sm">Session Duration</div>
-          <div className="text-white text-xl font-bold">{formatDuration(sessionDuration)}</div>
-          <div className="text-gray-400 text-sm mt-2">Total Buy-in</div>
-          <div className="text-yellow-400 text-xl font-bold">${totalBuyIn.toFixed(2)}</div>
+    <div className="relative w-full min-h-screen flex items-start justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 py-8 overflow-y-auto">
+      <div className="w-full max-w-md bg-gray-900 rounded-xl p-4 sm:p-6 shadow-2xl mx-2">
+        <h2 className="text-white text-xl sm:text-2xl mb-4 text-center">Session Ended</h2>
+        <div className="bg-gray-800 rounded-lg p-3 sm:p-4 mb-4">
+          <div className="text-gray-400 text-xs sm:text-sm">Session Duration</div>
+          <div className="text-white text-lg sm:text-xl font-bold">{formatDuration(sessionDuration)}</div>
+          <div className="text-gray-400 text-xs sm:text-sm mt-2">Total Buy-in</div>
+          <div className="text-yellow-400 text-lg sm:text-xl font-bold">${totalBuyIn.toFixed(2)}</div>
         </div>
         
         <div className="mb-4">
-          <h3 className="text-white mb-3">Enter Final Chip Counts</h3>
-          <div className="space-y-2">
+          <h3 className="text-white mb-3 text-sm sm:text-base">Enter Final Chip Counts</h3>
+          <div className="space-y-3">
             {players.map(player => (
-              <div key={player.id} className="flex items-center gap-2">
-                <div className="text-white text-sm flex-1">{player.name}</div>
-                <div className="text-gray-400 text-xs">Buy-in: ${player.chips.toFixed(2)}</div>
+              <div key={player.id} className="flex flex-col sm:flex-row sm:items-center gap-2 bg-gray-800/50 p-3 rounded-lg">
+                <div className="flex-1">
+                  <div className="text-white text-sm">{player.name}</div>
+                  <div className="text-gray-400 text-xs">Buy-in: ${player.chips.toFixed(2)}</div>
+                </div>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={finalChips[player.id] || ''}
                   onChange={(e) => updateFinalChips(player.id, e.target.value)}
-                  className="bg-gray-800 text-white text-sm px-3 py-2 rounded w-28"
+                  className="bg-gray-800 text-white text-sm px-3 py-2 rounded w-full sm:w-32"
                   placeholder="Final $"
                 />
               </div>
@@ -83,13 +85,13 @@ export function SessionValidation({
 
         <button
           onClick={calculateValidity}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg transition-colors mb-3"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 rounded-lg shadow-lg transition-colors mb-3 text-sm sm:text-base"
         >
           Calculate Validity
         </button>
 
         {validationMessage && (
-          <div className={`p-3 rounded-lg text-center mb-3 ${
+          <div className={`p-3 rounded-lg text-center mb-3 text-sm sm:text-base ${
             validationMessage.startsWith('✓') ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
           }`}>
             {validationMessage}
@@ -98,7 +100,7 @@ export function SessionValidation({
 
         <button
           onClick={onBackToTable}
-          className="w-full bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg shadow-lg transition-colors"
+          className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 sm:px-6 py-3 rounded-lg shadow-lg transition-colors text-sm sm:text-base"
         >
           Back to Table
         </button>

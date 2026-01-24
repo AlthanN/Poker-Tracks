@@ -118,10 +118,10 @@ function PokerTable() {
   };
 
   const getPlayerPosition = (position) => {
-    // Position players around an elongated oval (10 positions)
     const angle = (position / 10) * 2 * Math.PI - Math.PI / 2;
-    const radiusX = 42; // Horizontal radius percentage (wider)
-    const radiusY = 38; // Vertical radius percentage (increased for more spacing)
+    // Responsive radii based on screen size
+    const radiusX = window.innerWidth < 640 ? 38 : 42;
+    const radiusY = window.innerWidth < 640 ? 32 : 38;
     
     const x = 50 + radiusX * Math.cos(angle);
     const y = 50 + radiusY * Math.sin(angle);
@@ -146,125 +146,31 @@ function PokerTable() {
   }
 
   return (
-    <div className="relative w-full min-h-screen     flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 overflow-hidden">
-      {/* Poker Table */}
-      <div className="relative w-full max-w-none" style={{ aspectRatio: '16 / 9', maxHeight: '73vh', height: 'auto' }}>
-        {/* Table Surface - elongated oval */}
-        <div className="absolute inset-0 bg-green-700 rounded-[50%] border-8 border-amber-900 shadow-2xl">
-          {/* Inner felt */}
-          <div className="absolute inset-4 bg-green-600 rounded-[50%] border-4 border-green-800"></div>
-        </div>
-
-        {/* Community Cards Area */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <div className="flex gap-1 mb-3">
-            {communityCards.map((card, index) => (
-              <div
-                key={index}
-                className="w-8 h-12 bg-white rounded shadow-lg flex items-center justify-center border border-gray-300"
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-2 sm:p-4 overflow-hidden">
+      {/* Add Player Modal Overlay */}
+      {showAddPlayer && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-gray-900 rounded-lg px-4 py-4 shadow-xl border-2 border-blue-500 w-full max-w-md">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-white text-lg font-semibold">Add New Player</h3>
+              <button
+                onClick={() => {
+                  setShowAddPlayer(false);
+                  setNewPlayerName('');
+                  setNewPlayerBuyIn('10');
+                }}
+                className="text-gray-400 hover:text-white text-xl"
               >
-                <span className="text-xs">{card}</span>
-              </div>
-            ))}
-          </div>
-          {/* Pot */}
-          <div className="bg-amber-500 text-white px-4 py-1.5 rounded-full text-center shadow-lg">
-            <div className="text-[10px] opacity-80">TOTAL BUY-IN</div>
-            <div className="font-bold">${pot.toFixed(2)}</div>
-          </div>
-        </div>
-
-        {/* Players */}
-        {players.map((player) => (
-          <div key={player.id} className="absolute" style={getPlayerPosition(player.position)}>
-            {editingPlayerId === player.id ? (
-              // Edit Mode
-              <div className="bg-gray-900 rounded-lg px-3 py-2 min-w-[120px] shadow-xl border-2 border-blue-500">
-                <input
-                  type="text"
-                  value={editingName}
-                  onChange={(e) => setEditingName(e.target.value)}
-                  className="w-full bg-gray-800 text-white text-xs px-1 py-1 rounded mb-2"
-                  placeholder="Name"
-                />
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={editingBuyIn}
-                  onChange={(e) => setEditingBuyIn(e.target.value)}
-                  className="w-full bg-gray-800 text-white text-xs px-1 py-1 rounded mb-2"
-                  placeholder="Buy-in"
-                />
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => savePlayerEdit(player.id)}
-                    className="bg-green-600 text-white text-xs px-2 py-1 rounded flex-1"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    className="bg-gray-600 text-white text-xs px-2 py-1 rounded flex-1"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              // Display Mode
-              <div
-                onClick={() => removeMode ? removePlayer(player.id) : startEditingPlayer(player)}
-                className={`bg-gray-900 rounded-lg px-3 py-2 min-w-[100px] shadow-xl border-2 cursor-pointer ${
-                  player.isActive ? 'border-yellow-400' : 'border-gray-700'
-                } ${removeMode ? 'hover:border-red-500 hover:bg-red-900 transition-colors' : 'hover:border-blue-500 transition-colors'}`}
-              >
-                {removeMode && (
-                  <div className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                    ✕
-                  </div>
-                )}
-                {!removeMode && (
-                  <div className="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                    ✎
-                  </div>
-                )}
-                <div className="text-white text-xs mb-1">{player.name}</div>
-                <div className="flex items-center gap-1">
-                  {/* Chip icon */}
-                  <div className="w-4 h-4 rounded-full bg-gradient-to-br from-red-500 to-red-700 border border-white"></div>
-                  <span className="text-yellow-400 text-xs font-bold">${player.chips.toFixed(2)}</span>
-                </div>
-                {/* Player cards */}
-                {player.position === 5 && (
-                  <div className="flex gap-1 mt-2">
-                      <div className="w-6 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                      <div className="w-6 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                  </div>
-                )}
-                {/* Other players show card backs */}
-                {player.position !== 5 && (
-                  <div className="flex gap-1 mt-2">
-                    <div className="w-6 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                    <div className="w-6 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Add Player Button */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        {showAddPlayer ? (
-          <div className="bg-gray-900 rounded-lg px-4 py-3 shadow-xl border-2 border-blue-500">
+                ×
+              </button>
+            </div>
             <input
               type="text"
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
-              className="bg-gray-800 text-white text-sm px-3 py-2 rounded mb-2 w-48"
+              className="bg-gray-800 text-white text-sm px-3 py-3 rounded mb-3 w-full"
               placeholder="Player Name"
+              autoFocus
             />
             <input
               type="number"
@@ -272,15 +178,16 @@ function PokerTable() {
               min="0"
               value={newPlayerBuyIn}
               onChange={(e) => setNewPlayerBuyIn(e.target.value)}
-              className="bg-gray-800 text-white text-sm px-3 py-2 rounded mb-2 w-48"
+              className="bg-gray-800 text-white text-sm px-3 py-3 rounded mb-3 w-full"
               placeholder="Buy-in Amount"
             />
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={addPlayer}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1"
+                disabled={players.length >= 10}
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 py-3 rounded-lg flex-1 text-sm font-medium"
               >
-                Confirm
+                Add Player
               </button>
               <button
                 onClick={() => {
@@ -288,63 +195,171 @@ function PokerTable() {
                   setNewPlayerName('');
                   setNewPlayerBuyIn('10');
                 }}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex-1"
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg flex-1 text-sm"
               >
                 Cancel
               </button>
             </div>
           </div>
-        ) : (
-          <>
-            <button 
-              onClick={() => setShowAddPlayer(true)}
-              disabled={players.length >= 10 || removeMode}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg shadow-lg transition-colors"
+        </div>
+      )}
+
+      {/* Main Content - Always stays in same position */}
+      <div className="w-full flex flex-col items-center justify-center">
+        {/* Mobile Header - Stack controls vertically on small screens */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between mb-2 sm:mb-0 p-2">
+          {/* Session Controls */}
+          <div className="flex gap-2 mb-2 sm:mb-0 w-full sm:w-auto justify-center">
+            <button
+              onClick={startSession}
+              disabled={sessionStatus !== 'not-started' || showAddPlayer}
+              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg shadow-lg transition-colors flex-1 sm:flex-none"
             >
-              Add Player ({players.length}/10)
+              Start
             </button>
-
-            <button 
-              onClick={toggleRemoveMode}
-              disabled={players.length === 0}
-              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg shadow-lg transition-colors"
+            <button
+              onClick={stopSession}
+              disabled={sessionStatus !== 'in-progress' || showAddPlayer}
+              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg shadow-lg transition-colors flex-1 sm:flex-none"
             >
-              {removeMode ? 'Cancel' : 'Remove Player'}
+              Stop
             </button>
-          </>
-        )}
-      </div>
+            <button
+              onClick={resetSession}
+              disabled={sessionStatus === 'not-started' || showAddPlayer}
+              className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg shadow-lg transition-colors flex-1 sm:flex-none"
+            >
+              Reset
+            </button>
+          </div>
 
-      {/* Session Controls */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        <button
-          onClick={startSession}
-          disabled={sessionStatus !== 'not-started'}
-          className="bg-green-600 hover:bg-green-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg shadow-lg transition-colors"
-        >
-          Start Session
-        </button>
-        <button
-          onClick={stopSession}
-          disabled={sessionStatus !== 'in-progress'}
-          className="bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg shadow-lg transition-colors"
-        >
-          Stop Session
-        </button>
-        <button
-          onClick={resetSession}
-          disabled={sessionStatus === 'not-started'}
-          className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg shadow-lg transition-colors"
-        >
-          Reset Session
-        </button>
-      </div>
+          {/* Session Duration */}
+          <div className="bg-gray-900 text-white px-3 sm:px-4 py-2 rounded-lg shadow-lg w-full sm:w-auto text-center">
+            <div className="text-[10px] sm:text-xs opacity-80">Session Duration</div>
+            <div className="font-bold text-sm sm:text-base">{formatDuration(sessionDuration)}</div>
+          </div>
+        </div>
 
-      {/* Session Duration */}
-      <div className="absolute top-8 right-8 z-20">
-        <div className="bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg">
-          <div className="text-[10px] opacity-80">Session Duration</div>
-          <div className="font-bold">{formatDuration(sessionDuration)}</div>
+        {/* Poker Table */}
+        <div className="relative w-full" style={{ aspectRatio: '16 / 9', maxHeight: 'calc(100vh - 180px)', height: 'auto' }}>
+          {/* Table Surface - elongated oval */}
+          <div className="absolute inset-0 bg-green-700 rounded-[50%] border-4 sm:border-8 border-amber-900 shadow-2xl">
+            {/* Inner felt */}
+            <div className="absolute inset-2 sm:inset-4 bg-green-600 rounded-[50%] border-2 sm:border-4 border-green-800"></div>
+          </div>
+
+          {/* Community Cards Area */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            <div className="flex gap-0.5 sm:gap-1 mb-2 sm:mb-3">
+              {communityCards.map((card, index) => (
+                <div
+                  key={index}
+                  className="w-6 h-8 sm:w-8 sm:h-12 bg-white rounded shadow-lg flex items-center justify-center border border-gray-300"
+                >
+                  <span className="text-[8px] sm:text-xs">{card}</span>
+                </div>
+              ))}
+            </div>
+            {/* Pot */}
+            <div className="bg-amber-500 text-white px-2 sm:px-4 py-1 sm:py-1.5 rounded-full text-center shadow-lg">
+              <div className="text-[8px] sm:text-[10px] opacity-80">TOTAL BUY-IN</div>
+              <div className="font-bold text-sm sm:text-base">${pot.toFixed(2)}</div>
+            </div>
+          </div>
+
+          {/* Players */}
+          {players.map((player) => (
+            <div key={player.id} className="absolute" style={getPlayerPosition(player.position)}>
+              {editingPlayerId === player.id ? (
+                // Edit Mode
+                <div className="bg-gray-900 rounded-lg px-2 py-1 sm:px-3 sm:py-2 min-w-[90px] sm:min-w-[120px] shadow-xl border-2 border-blue-500">
+                  <input
+                    type="text"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    className="w-full bg-gray-800 text-white text-[10px] sm:text-xs px-1 py-0.5 sm:py-1 rounded mb-1 sm:mb-2"
+                    placeholder="Name"
+                  />
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={editingBuyIn}
+                    onChange={(e) => setEditingBuyIn(e.target.value)}
+                    className="w-full bg-gray-800 text-white text-[10px] sm:text-xs px-1 py-0.5 sm:py-1 rounded mb-1 sm:mb-2"
+                    placeholder="Buy-in"
+                  />
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => savePlayerEdit(player.id)}
+                      className="bg-green-600 text-white text-[10px] sm:text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex-1"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="bg-gray-600 text-white text-[10px] sm:text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex-1"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // Display Mode
+                <div
+                  onClick={() => (removeMode && !showAddPlayer) ? removePlayer(player.id) : (!showAddPlayer && !removeMode) ? startEditingPlayer(player) : null}
+                  className={`bg-gray-900 rounded-lg px-2 py-1 sm:px-3 sm:py-2 min-w-[80px] sm:min-w-[100px] shadow-xl border-2 cursor-pointer ${
+                    player.isActive ? 'border-yellow-400' : 'border-gray-700'
+                  } ${removeMode && !showAddPlayer ? 'hover:border-red-500 hover:bg-red-900 transition-colors' : (!showAddPlayer && !removeMode) ? 'hover:border-blue-500 transition-colors' : 'cursor-default'}`}
+                >
+                  {removeMode && !showAddPlayer && (
+                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">
+                      ✕
+                    </div>
+                  )}
+                  {!removeMode && !showAddPlayer && (
+                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-blue-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">
+                      ✎
+                    </div>
+                  )}
+                  <div className="text-white text-xs truncate mb-0.5 sm:mb-1">{player.name}</div>
+                  <div className="flex items-center gap-1">
+                    {/* Chip icon */}
+                    <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-red-500 to-red-700 border border-white"></div>
+                    <span className="text-yellow-400 text-xs font-bold">${player.chips.toFixed(2)}</span>
+                  </div>
+                  {/* Player cards */}
+                  <div className="flex gap-0.5 sm:gap-1 mt-1 sm:mt-2">
+                    <div className="w-4 h-6 sm:w-6 sm:h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
+                    <div className="w-4 h-6 sm:w-6 sm:h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Add Player Controls */}
+        <div className="w-full mt-2 m:mt-4 px-2">
+          {!showAddPlayer && (
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <button 
+                onClick={() => setShowAddPlayer(true)}
+                disabled={players.length >= 10 || removeMode}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 sm:px-8 py-3 rounded-lg shadow-lg transition-colors text-sm sm:text-base"
+              >
+                Add Player ({players.length}/10)
+              </button>
+
+              <button 
+                onClick={toggleRemoveMode}
+                disabled={players.length === 0 || showAddPlayer}
+                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 sm:px-8 py-3 rounded-lg shadow-lg transition-colors text-sm sm:text-base"
+              >
+                {removeMode ? 'Cancel' : 'Remove Player'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
