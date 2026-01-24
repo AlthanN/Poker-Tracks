@@ -1,16 +1,7 @@
-# React + Vite
+Created a poker tracking website that takes in buy in values from current players, and ensures that final chip counts are accurate for quick and efficient poker games. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+User can easily add players with names and buy in counts, which can also be modified before and during each poker session. Once a user ends the session, they are prompted
+to enter final chip counts, and once all values are entered, the website will do a quick calculation to see if the counts are accurate and if they aren't, they will say
+by how much, until the user finally enters the proper amount that adds to the total buy in. 
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This was created with React, JavaScript, Figma, and Tailwind CSS.
