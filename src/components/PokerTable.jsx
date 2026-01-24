@@ -4,7 +4,7 @@ import { SessionValidation } from './SessionValidation';
 function PokerTable() {
   const [players, setPlayers] = useState([
     { id: 1, name: 'Player 1', chips: 10, position: 0, isActive: true },
-    { id: 2, name: 'Player 2', chips: 20, position: 3, isActive: false },
+    { id: 2, name: 'Player 2', chips: 20, position: 3, isActive: true },
     { id: 3, name: 'You', chips: 15, position: 5, isActive: true },
     { id: 4, name: 'Player 4', chips: 20, position: 7, isActive: true },
   ]);
@@ -146,7 +146,7 @@ function PokerTable() {
   }
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-2 sm:p-4 overflow-hidden">
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-green-900 via-green-800 to-green-900 p-2 sm:p-4 overflow-hidden">
       {/* Add Player Modal Overlay */}
       {showAddPlayer && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
@@ -269,74 +269,74 @@ function PokerTable() {
 
           {/* Players */}
           {players.map((player) => (
-            <div key={player.id} className="absolute" style={getPlayerPosition(player.position)}>
-              {editingPlayerId === player.id ? (
-                // Edit Mode
-                <div className="bg-gray-900 rounded-lg px-2 py-1 sm:px-3 sm:py-2 min-w-[90px] sm:min-w-[120px] shadow-xl border-2 border-blue-500">
-                  <input
-                    type="text"
-                    value={editingName}
-                    onChange={(e) => setEditingName(e.target.value)}
-                    className="w-full bg-gray-800 text-white text-[10px] sm:text-xs px-1 py-0.5 sm:py-1 rounded mb-1 sm:mb-2"
-                    placeholder="Name"
-                  />
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={editingBuyIn}
-                    onChange={(e) => setEditingBuyIn(e.target.value)}
-                    className="w-full bg-gray-800 text-white text-[10px] sm:text-xs px-1 py-0.5 sm:py-1 rounded mb-1 sm:mb-2"
-                    placeholder="Buy-in"
-                  />
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => savePlayerEdit(player.id)}
-                      className="bg-green-600 text-white text-[10px] sm:text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex-1"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="bg-gray-600 text-white text-[10px] sm:text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex-1"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                // Display Mode
-                <div
-                  onClick={() => (removeMode && !showAddPlayer) ? removePlayer(player.id) : (!showAddPlayer && !removeMode) ? startEditingPlayer(player) : null}
-                  className={`bg-gray-900 rounded-lg px-2 py-1 sm:px-3 sm:py-2 min-w-[80px] sm:min-w-[100px] shadow-xl border-2 cursor-pointer ${
-                    player.isActive ? 'border-yellow-400' : 'border-gray-700'
-                  } ${removeMode && !showAddPlayer ? 'hover:border-red-500 hover:bg-red-900 transition-colors' : (!showAddPlayer && !removeMode) ? 'hover:border-blue-500 transition-colors' : 'cursor-default'}`}
-                >
-                  {removeMode && !showAddPlayer && (
-                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">
-                      ✕
-                    </div>
-                  )}
-                  {!removeMode && !showAddPlayer && (
-                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-blue-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">
-                      ✎
-                    </div>
-                  )}
-                  <div className="text-white text-xs truncate mb-0.5 sm:mb-1">{player.name}</div>
-                  <div className="flex items-center gap-1">
-                    {/* Chip icon */}
-                    <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-red-500 to-red-700 border border-white"></div>
-                    <span className="text-yellow-400 text-xs font-bold">${player.chips.toFixed(2)}</span>
-                  </div>
-                  {/* Player cards */}
-                  <div className="flex gap-0.5 sm:gap-1 mt-1 sm:mt-2">
-                    <div className="w-4 h-6 sm:w-6 sm:h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                    <div className="w-4 h-6 sm:w-6 sm:h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+  <div key={player.id} className="absolute" style={getPlayerPosition(player.position)}>
+    {editingPlayerId === player.id ? (
+      // Edit Mode - More responsive
+      <div className="bg-gray-900 rounded-lg px-1.5 py-1 sm:px-2 md:px-3 sm:py-1.5 md:py-2 min-w-17.5 sm:min-w-21.25 md:min-w-25 lg:min-w-30 shadow-xl border-2 border-blue-500">
+        <input
+          type="text"
+          value={editingName}
+          onChange={(e) => setEditingName(e.target.value)}
+          className="w-full bg-gray-800 text-white text-[9px] sm:text-[10px] md:text-xs px-1 py-0.5 rounded mb-1 sm:mb-1.5 md:mb-2"
+          placeholder="Name"
+        />
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          value={editingBuyIn}
+          onChange={(e) => setEditingBuyIn(e.target.value)}
+          className="w-full bg-gray-800 text-white text-[9px] sm:text-[10px] md:text-xs px-1 py-0.5 rounded mb-1 sm:mb-1.5 md:mb-2"
+          placeholder="Buy-in"
+        />
+        <div className="flex gap-0.5 sm:gap-1">
+          <button
+            onClick={() => savePlayerEdit(player.id)}
+            className="bg-green-600 text-white text-[9px] sm:text-[10px] md:text-xs px-1 py-0.5 sm:px-1.5 sm:py-0.5 md:px-2 rounded flex-1"
+          >
+            Save
+          </button>
+          <button
+            onClick={cancelEdit}
+            className="bg-gray-600 text-white text-[9px] sm:text-[10px] md:text-xs px-1 py-0.5 sm:px-1.5 sm:py-0.5 md:px-2 rounded flex-1"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ) : (
+      // Display Mode - More responsive
+      <div
+        onClick={() => (removeMode && !showAddPlayer) ? removePlayer(player.id) : (!showAddPlayer && !removeMode) ? startEditingPlayer(player) : null}
+        className={`bg-gray-900 rounded-lg px-1.5 py-1 sm:px-2 md:px-3 sm:py-1.5 md:py-2 min-w-16.25 sm:min-w-18.75 md:min-w-22.5 lg:min-w-25 shadow-xl border-2 cursor-pointer ${
+          'border-yellow-400'
+        } ${removeMode && !showAddPlayer ? 'hover:border-red-500 hover:bg-red-900 transition-colors' : (!showAddPlayer && !removeMode) ? 'hover:border-blue-500 transition-colors' : 'cursor-default'}`}
+      >
+        {removeMode && !showAddPlayer && (
+          <div className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 md:-top-2 md:-right-2 bg-red-600 text-white rounded-full w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex items-center justify-center text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs">
+            ✕
+          </div>
+        )}
+        {!removeMode && !showAddPlayer && (
+          <div className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 md:-top-2 md:-right-2 bg-blue-600 text-white rounded-full w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex items-center justify-center text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs">
+            ✎
+          </div>
+        )}
+        <div className="text-white text-[10px] sm:text-xs truncate mb-0.5 sm:mb-1">{player.name}</div>
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          {/* Chip icon - more responsive */}
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4 rounded-full bg-linear-to-br from-red-500 to-red-700 border border-white"></div>
+          <span className="text-yellow-400 text-[10px] sm:text-xs font-bold">${player.chips.toFixed(2)}</span>
+        </div>
+        {/* Player cards - more responsive */}
+        <div className="flex gap-0.5 sm:gap-0.5 md:gap-1 mt-0.5 sm:mt-1 md:mt-2">
+          <div className="w-3 h-4.5 sm:w-4 sm:h-6 md:w-5 md:h-7 lg:w-6 lg:h-9 bg-linear-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
+          <div className="w-3 h-4.5 sm:w-4 sm:h-6 md:w-5 md:h-7 lg:w-6 lg:h-9 bg-linear-to-br from-blue-600 to-blue-800 rounded shadow border border-blue-900"></div>
+        </div>
+      </div>
+    )}
+  </div>
+))}
         </div>
 
         {/* Add Player Controls */}
